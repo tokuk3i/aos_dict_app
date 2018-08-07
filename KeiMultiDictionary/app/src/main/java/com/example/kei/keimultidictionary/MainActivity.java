@@ -6,12 +6,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     SearchView searchView;
     ListView listView;
-    String[] wordList;
-    ArrayAdapter<String> arrayAdapter;
+    /*String[] wordList;
+    ArrayAdapter<String> arrayAdapter;*/
+    ListEntryAdapter entriesAdapter;
+    ArrayList<WordEntry> entriesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,20 +28,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         listView = (ListView)findViewById(R.id.listsugview);
 
 
-        wordList = new String[]{"Lion", "Tiger", "Dog",
-                "Cat", "Tortoise", "Rat", "Elephant", "Fox",
-                "Cow","Donkey","Monkey"};
+        entriesList = new ArrayList<WordEntry>();
+        WordEntry entry1 = new WordEntry("hello","xin chao",1);
+        WordEntry entry2 = new WordEntry("hi","nihao",2);
+        entriesList.add(entry1);
+        entriesList.add(entry2);
 
-        arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,wordList);
-        listView.setAdapter(arrayAdapter);
+        entriesAdapter = new ListEntryAdapter(this);
+        entriesAdapter.setWordList(entriesList);
+
+        listView.setAdapter(entriesAdapter);
 
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
 
-        wordList = new String[]{"Na", "Kei", "Dung"};
-        arrayAdapter.notifyDataSetChanged();
         return false;
     }
 
@@ -46,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         /*String text = newText;
         adapter.filter(text);
         */
-        wordList = new String[]{"Na", "Kei", "Dung"};
-        arrayAdapter.notifyDataSetChanged();
         return false;
     }
 }
