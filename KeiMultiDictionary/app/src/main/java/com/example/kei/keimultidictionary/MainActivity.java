@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onQueryTextSubmit(String query) {
 
+        listView.setVisibility(View.INVISIBLE);
+        contentView.setText(query);
+        contentView.setVisibility(View.VISIBLE);
         return false;
     }
 
@@ -73,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         /*String text = newText;
         adapter.filter(text);
         */
+        listView.setVisibility(View.VISIBLE);
+        contentView.setVisibility(View.INVISIBLE);
         return false;
     }
 }
