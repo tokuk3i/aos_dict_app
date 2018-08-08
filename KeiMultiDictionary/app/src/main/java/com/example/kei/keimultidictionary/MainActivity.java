@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         */
         entriesList.clear();
         entriesList = handle.getSugesstionList(newText);
+        entriesAdapter.setWordList(entriesList);
         //entriesList = new ArrayList<WordEntry>(handle.getSugesstionList(newText));
         //Log.d("main","number : "+entriesList.size());
         entriesAdapter.notifyDataSetChanged();
