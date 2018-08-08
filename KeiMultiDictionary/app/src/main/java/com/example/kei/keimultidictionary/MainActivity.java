@@ -1,7 +1,10 @@
 package com.example.kei.keimultidictionary;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -21,11 +24,25 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     ArrayAdapter<String> arrayAdapter;*/
     ListEntryAdapter entriesAdapter;
     ArrayList<WordEntry> entriesList;
+    DictionaryData handle;
+    SQLiteDatabase db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        handle = new DictionaryData(this.getApplicationContext());
+        db = handle.getReadableDatabase();
+//        WordEntry entry1 = new WordEntry("kei","xin chao",1);
+//        WordEntry entry2 = new WordEntry("dung","nihao",2);
+//        handle.addNewWord(entry1);
+//        handle.addNewWord(entry2);
+
+        Cursor check  = handle.getData();
+        Log.d("main","num : "+check.getCount());
 
         searchView = (SearchView)findViewById(R.id.searchview);
         searchView.setOnQueryTextListener(this);
@@ -37,13 +54,23 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
         entriesList = new ArrayList<WordEntry>();
-        WordEntry entry1 = new WordEntry("hello","xin chao",1);
-        WordEntry entry2 = new WordEntry("hi","nihao",2);
-        entriesList.add(entry1);
-        entriesList.add(entry2);
+        //entriesList = handle.getAllData();
+        entriesList = handle.getSugesstionList("ke");
 
         entriesAdapter = new ListEntryAdapter(this);
         entriesAdapter.setWordList(entriesList);
+
+
+        //db.execSQL("INSERT INTO master_dict　(dict_id,word,mean) VALUES (1,'test','dfghj')");
+        //Message.message(this.getApplicationContext(),"TABLE CREATED" + db.getPath());
+        //entriesList = handle.getSugesstionList(db,null);
+
+        //Cursor test = db.rawQuery("SELECT * FROM master_dict",null);
+        //Log.d("kei","test");
+        //Message.message(this.getApplicationContext(),"TABLE CREATED : " + test.getCount());
+
+
+
 
         listView.setAdapter(entriesAdapter);
 
@@ -59,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 //Toast.makeText(MainActivity.this, "Selected :" + " " + country, Toast.LENGTH_LONG).show();
             }
         });
+
 
     }
 
@@ -76,6 +104,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         /*String text = newText;
         adapter.filter(text);
         */
+        entriesList.clear();
+        entriesList = handle.getSugesstionList(newText);
+        //entriesList = new ArrayList<WordEntry>(handle.getSugesstionList(newText));
+        //Log.d("main","number : "+entriesList.size());
+        entriesAdapter.notifyDataSetChanged();
         listView.setVisibility(View.VISIBLE);
         contentView.setVisibility(View.INVISIBLE);
         return false;
